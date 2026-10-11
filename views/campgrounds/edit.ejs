@@ -1,0 +1,42 @@
+<% layout('layouts/boilerplate') %>
+    <div class="row">
+        <h1 class="text-center">
+            register
+        </h1>
+        <div class="offset-3 col-6">
+
+        </div>
+    </div>
+    <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="post">
+    <div>
+        <label class="form-label" for="title">title</label>
+        <input class="form-control" type="text" name="campground[title]" id="title" value=<%=campground.title%>>
+    </div>
+    <div>
+        <label class="form-label" for="location">location</label>
+        <input class="form-control" type="text" name="campground[location]" id="location"
+            value=<%=campground.location%>>
+    </div>
+    <div>
+        <label class="form-label" for="location">image</label>
+        <input class="form-control" type="text" name="campground[image]" id="image" value=<%=campground.image%>>
+    </div>
+    <div class="mb-3">
+        <label for="price" class="form-label">price</label>
+        <div class="input-group">
+            <span class="input-group-text" id="price">yen</span>
+            <input type="text" class="form-control" id="price" placeholder="0" aria-label="price"
+                aria-describedby="price-label" name="campground[price]" value=<%=campground.price%>>
+        </div>
+    </div>
+    <div>
+        <label class="form-label" for="description">description</label>
+        <textarea class="form-control" type="text" name="campground[description]" id="description">
+            <%=campground.description%>
+        </textarea>
+    </div>
+    <button class="btn-success">edit</button>
+    </form>
+    <div>
+        <a href="/campgrounds">back to list</a>
+    </div>
