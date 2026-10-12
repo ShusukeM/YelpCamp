@@ -7,35 +7,55 @@
 
         </div>
     </div>
-    <form action="/campgrounds" method="post">
+    <form action="/campgrounds" method="post" novalidate class="needs-validation">
         <div>
             <label class="form-label" for="title">title</label>
-            <input class="form-control" type="text" name="campground[title]" id="title">
+            <input class="form-control" type="text" name="campground[title]" id="title" required>
         </div>
         <div>
             <label class="form-label" for="location">location</label>
-            <input class="form-control" type="text" name="campground[location]" id="location">
+            <input class="form-control" type="text" name="campground[location]" id="location" required>
         </div>
         <div>
             <label class="form-label" for="location">image</label>
-            <input class="form-control" type="text" name="campground[image]" id="image">
+            <input class="form-control" type="text" name="campground[image]" id="image" required>
         </div>
         <div class="mb-3">
             <label for="price" class="form-label">price</label>
             <div class="input-group">
                 <span class="input-group-text" id="price">yen</span>
                 <input type="text" class="form-control" id="price" placeholder="0" aria-label="price"
-                    aria-describedby="price-label" name="campground[price]">
+                    aria-describedby="price-label" name="campground[price]" required>
             </div>
         </div>
         <div>
             <label class="form-label" for="description">description</label>
-            <textarea class="form-control" type="text" name="campground[description]" id="description">
-
-            </textarea>
+            <textarea class="form-control" type="text" name="campground[description]" id="description" required></textarea>
         </div>
         <button class="btn-success">register</button>
     </form>
     <div>
         <a href="/campgrounds">back to list</a>
     </div>
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
