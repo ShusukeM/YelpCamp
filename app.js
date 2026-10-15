@@ -11,12 +11,16 @@ const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
 const {campgroundSchema, reviewSchema} = require("./schemas")
 const { error } = require("console");
-const campgroundRoutes = require("./routes/campground");
+const campgroundRoutes = require("./routes/campgrounds");
+const reviewRoutes = require("./routes/reviews");
+const session = require('express-session');
+const flash = require('connect-flash');
 const app = express();
 mongoose.connect('mongodb://admin:password@mongodb:27017/yelp-camp?authSource=admin',
     { useNewUrlParser: true,
         useUnifiedTopology: true,
-        useCreateIndex: true
+        useCreateIndex: true,
+        useFindAndModify: false
     }
 ).then( () => {
     console.log("connection OK");
@@ -30,54 +34,33 @@ app.engine("ejs", ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 
-const validateCampground = (req, res, next) => {
-    const {error} = campgroundSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(detail => detail.message).join(",");
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
+const sessionConfig = {
+    secret: 'mysecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7
     }
-};
-const validateReview = (req, res, next) => {
-    const {error} = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(detail => detail.message).join(",");
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-};
+}
+app.use(session(sessionConfig));
+app.use(flash());
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
 app.get("/", (req, res) => {
     // res.send("yelpcamp");
     res.render("home");
 });
 app.use("/campgrounds", campgroundRoutes);
-app.post("/campgrounds/:id/reviews", validateReview, catchAsync(async (req, res) => {
-    const {id} = req.params;
-    const campground = await Campground.findById(id);
-    const review = new Review(req.body.review);
-    campground.reviews.push(review);
-    await review.save();
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
-app.delete("/campgrounds/:id/reviews/:reviewId", catchAsync(async (req, res) => {
-    const {id, reviewId} = req.params;
-    await Campground.findByIdAndUpdate(id, {
-        $pull: {
-            reviews: reviewId
-        }
-    });
-    await Review.findByIdAndDelete(reviewId);
-
-    res.redirect(`/campgrounds/${id}`);
-}));
+app.use("/campgrounds/:id/reviews", reviewRoutes);
 app.all("/{*path}", (req, res, next) => {
     next(new ExpressError("page not found", 404));
 });
