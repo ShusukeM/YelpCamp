@@ -2,3 +2,4 @@ node_modules
 core.*
 core.45425
 core.49820
+.env

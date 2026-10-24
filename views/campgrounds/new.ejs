@@ -7,7 +7,7 @@
 
         </div>
     </div>
-    <form action="/campgrounds" method="post" novalidate class="needs-validation">
+    <form action="/campgrounds" method="post" novalidate class="needs-validation" enctype="multipart/form-data">
         <div>
             <label class="form-label" for="title">title</label>
             <input class="form-control" type="text" name="campground[title]" id="title" required>
@@ -17,8 +17,8 @@
             <input class="form-control" type="text" name="campground[location]" id="location" required>
         </div>
         <div>
-            <label class="form-label" for="location">image</label>
-            <input class="form-control" type="text" name="campground[image]" id="image" required>
+            <label class="form-label" for="location">upload images</label>
+            <input class="form-control" type="file" name="image" id="image" multiple>
         </div>
         <div class="mb-3">
             <label for="price" class="form-label">price</label>
