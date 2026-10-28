@@ -39,14 +39,14 @@ const seedDB = async () => {
                     url: 'https://res.cloudinary.com/dwwvtzk17/image/upload/v1632789765/YelpCamp/vxoo12zm4ram21smpfay.jpg',
                     filename: 'YelpCamp/vxoo12zm4ram21smpfay'
                 }
-            ]
-            // geometry: {
-            //     type: 'Point',
-            //     coordinates: [
-            //         cities[randomCityIndex].longitude,
-            //         cities[randomCityIndex].latitude
-            //     ]
-            // }
+            ],
+            geometry: {
+                type: 'Point',
+                coordinates: [
+                    cities[randomCityIndex].longitude,
+                    cities[randomCityIndex].latitude
+                ]
+            }
         });
         await camp.save();
     }
